@@ -1,0 +1,36 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #3b8a7d, #9857f2); /* 修改背景色为渐变色 */
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+}
+
+.login-form {
+    position: fixed;
+    background-color:  #ffffff;
+    padding: 20px; /* 增加内边距 */
+    border-radius: 12px; /* 增加圆角 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 增加阴影 */
+    width: 300px; /* 设置固定宽度 */
+    height: 300px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+
+.login-title-text {
+    font-size: 30px; /* 设置字体大小 */
+    color: #0e0d0d; /* 设置字体颜色 */
+    margin-bottom: 20px; /* 增加底部间距 */
+    text-align: center; /* 居中对齐 */
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
