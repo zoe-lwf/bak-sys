@@ -1,6 +1,7 @@
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {Button, message, Table, Tag} from "antd";
+import {useNavigate} from "react-router-dom";
 
 export default function AuditList() {
     // 定义 auditState 映射
@@ -16,6 +17,7 @@ export default function AuditList() {
         2: { text: '已发布', color: 'green' },
         3: { text: '已下线', color: 'blue' }
     };
+
     const columns = [
         {
             title: '标题',
@@ -53,13 +55,13 @@ export default function AuditList() {
                 return (
                     <div>
                         {
-                            record.auditState === 1 && <Button danger>撤销</Button>
+                            record.auditState === 1 && <Button danger onClick={() => handlerRevert(record)}>撤销</Button>
                         }
                         {
-                            record.auditState === 2 && <Button >发布</Button>
+                            record.auditState === 2 && <Button onClick={() => handlerPublish(record)}>发布</Button>
                         }
                         {
-                            record.auditState === 3 && <Button type="primary">更新</Button>
+                            record.auditState === 3 && <Button type="primary" onClick={() => handlerUpdate(record)}>更新</Button>
                         }
                     </div>
                 );
@@ -69,6 +71,7 @@ export default function AuditList() {
     const {username} = JSON.parse(localStorage.getItem('authToken'));
     const [auditList, setAuditList] = useState([]);
     const [categories, setCategories] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         fetchAuditList().then()
         fetchCategories().then()
@@ -78,7 +81,6 @@ export default function AuditList() {
         try {
             await axios.get(`/news?author=${username}&auditState_ne=0&publishState_lte=1`)
                 .then(r => {
-                        console.log(r.data)
                         setAuditList(r.data)
                     })
         } catch (error) {
@@ -93,6 +95,25 @@ export default function AuditList() {
             message.error('Failed to fetch categories: ' + error.message);
         }
     };
+
+    function handlerRevert(item) {
+        setAuditList(auditList.filter(data => data.id !== item.id))
+        axios.patch(`/news/${item.id}`, {auditState: 0}).then(r => {
+            message.success('success! you can view in draft box.');
+        })
+    }
+    function handlerPublish(item) {
+        axios.patch(`/news/${item.id}`, {publishState: 2}).then(r => {
+            message.success('success! you can view in publish box.').then(r => {
+                navigate('/publish-manage/published');
+            });
+
+        })
+    }
+    function handlerUpdate(record) {
+        navigate(`/news-manage/update/${record.id}`);
+    }
+
     return (
         <div>
             <Table

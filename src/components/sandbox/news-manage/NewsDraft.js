@@ -58,7 +58,7 @@ export default function NewsDraft() {
                 <Input value={editingDraft.categoryId}
                        onChange={e => setEditingDraft({...editingDraft, categoryId: e.target.value})}/>
             ) : (
-                <Tag color="blue">{categories.find(category => category.id === categoryId)?.value || 'Unknown'}</Tag> // 修改: 使用Tag组件显示分类
+                <Tag color="blue">{categories.find(category => category.id === String(categoryId))?.value || 'Unknown'}</Tag> // 修改: 使用Tag组件显示分类
             ),
         },
         {
