@@ -10,8 +10,8 @@ export default function Audit() {
         {
             title: '标题',
             dataIndex: 'title',
-            render: (title) => {
-                return <a href={`/news-manage/add`}>{title}</a>
+            render: (title,item) => {
+                return <a href={`/news-manage/preview/${item.id}`}>{title}</a>
             }
         },
         {

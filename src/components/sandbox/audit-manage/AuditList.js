@@ -11,19 +11,13 @@ export default function AuditList() {
         2: { text: '已通过', color: 'green' },
         3: { text: '未通过', color: 'blue' }
     };
-    const publishStateMap = {
-        0: { text: '未发布', color: 'red' },
-        1: { text: '待发布', color: 'orange' },
-        2: { text: '已发布', color: 'green' },
-        3: { text: '已下线', color: 'blue' }
-    };
 
     const columns = [
         {
             title: '标题',
             dataIndex: 'title',
-            render: (title) => {
-                return <a href={`/news-manage/add`}>{title}</a>
+            render: (title,item) => {
+                return <a href={`/news-manage/preview/${item.id}`}>{title}</a>
             }
         },
         {
@@ -103,7 +97,7 @@ export default function AuditList() {
         })
     }
     function handlerPublish(item) {
-        axios.patch(`/news/${item.id}`, {publishState: 2}).then(r => {
+        axios.patch(`/news/${item.id}`, {publishState: 2, publishTime: Date.now()}).then(r => {
             message.success('success! you can view in publish box.').then(r => {
                 navigate('/publish-manage/published');
             });

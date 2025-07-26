@@ -10,7 +10,6 @@ import NewsDraft from "./news-manage/NewsDraft";
 import NewsCategory from "./news-manage/NewsCategory";
 import Audit from "./audit-manage/Audit";
 import AuditList from "./audit-manage/AuditList";
-import Publish from "./publish-manage/Publish";
 import Unpublished from "./publish-manage/Unpublished";
 import Published from "./publish-manage/Published";
 import Sunset from "./publish-manage/Sunset";
@@ -32,7 +31,6 @@ const LocalRouteMap = {
     "/news-manage/preview/:id": NewsDetail,
     "/audit-manage/audit": Audit,
     "/audit-manage/list": AuditList,
-    "/publish-manage": Publish,
     "/publish-manage/unpublished": Unpublished,
     "/publish-manage/published": Published,
     "/publish-manage/sunset": Sunset
