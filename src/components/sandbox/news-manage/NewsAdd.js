@@ -25,7 +25,7 @@ export default function NewsAdd() {
         axios.get("/categories").then(res => {
             setCategoryList(res.data)
         })
-    })
+    },[])
 
     function nextStep() {
         if (currentStep === 0){

@@ -2,10 +2,14 @@ import {Header} from "antd/es/layout/layout";
 import {Avatar, Button, Dropdown, theme, message} from "antd";
 import {MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined} from "@ant-design/icons";
 import {useState} from "react";
-import {useNavigate} from "react-router-dom"; // 使用 useNavigate 代替 useHistory
+import {useNavigate} from "react-router-dom";
+import {connect} from "react-redux";
 
-export default function TopHeader() {
-    const [collapsed, setCollapsed] = useState(false);
+function TopHeader(props) {
+    // const [collapsed, setCollapsed] = useState(props.collapsed);
+    const changed = () => {
+        props.changed()
+    }
     const {username} = JSON.parse(localStorage.getItem("authToken"))
     const {roleName} = JSON.parse(localStorage.getItem("role"))
     const navigate = useNavigate();
@@ -52,8 +56,7 @@ export default function TopHeader() {
         >
             <Button
                 type="text"
-                icon={collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
-                onClick={() => setCollapsed(!collapsed)}
+                icon={props.collapsed ? <MenuUnfoldOutlined onClick={ changed}/> : <MenuFoldOutlined onClick={ changed}/>}
                 style={{
                     fontSize: '16px',
                     width: 64,
@@ -78,3 +81,28 @@ export default function TopHeader() {
         </Header>
     )
 }
+
+/**
+ * 映射Redux全局的state到组件的props上
+ * connect(
+ *      1. mapStateToProps,
+ *      2. mapDispatchToProps,
+ * )(被包装的组件)
+ */
+
+const mapStateToProps = (state) => {
+    return {
+        collapsed: state.CollapsedReducer.isCollapsed
+    }
+}
+
+// 分发 action 的函数
+const mapDispatchToProps = {
+    changed(){
+        return {
+            type: "change_collapsed"
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopHeader)

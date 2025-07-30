@@ -12,9 +12,10 @@ import {
 } from '@ant-design/icons';
 import {Link, useLocation} from "react-router-dom";
 import axios from "axios";
+import {connect} from "react-redux";
 
-export const SideMenu = () => {
-    const [collapsed] = useState(false);
+export function SideMenu(props){
+    // const [collapsed] = useState(props.collapsed);
     const [menu, setMenu] = useState([]);
     const iconList = {
         "/home": <HomeOutlined/>,
@@ -68,9 +69,9 @@ export const SideMenu = () => {
     }
 
     return (
-        <Sider className={'sideMenu'} trigger={null} collapsible collapsed={collapsed}>
+        <Sider className={'sideMenu'} trigger={null} collapsible collapsed={props.collapsed}>
             <div style={{height: '100%', display: "flex",flexDirection: "column"}}>
-                <div className={'logo'}>新闻发布系统</div>
+                <div className={'logo'}>WMS</div>
                 <div style={{flex: 1, overflowY: 'auto'}}>
                     <Menu
                         theme="dark"
@@ -85,3 +86,10 @@ export const SideMenu = () => {
         </Sider>
     )
 }
+
+const mapStateToProps = (state) => {
+    return {
+        collapsed: state.CollapsedReducer.isCollapsed
+    }
+}
+export default connect(mapStateToProps)(SideMenu);

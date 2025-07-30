@@ -18,6 +18,8 @@ import axios from "axios";
 import React from "react";
 import NewsUpdate from "./news-manage/NewsUpdate";
 import NewsDetail from "./news-manage/NewsDetails";
+import {Spin} from "antd";
+import {connect} from "react-redux";
 
 const LocalRouteMap = {
     "/home": Home,
@@ -35,10 +37,10 @@ const LocalRouteMap = {
     "/publish-manage/published": Published,
     "/publish-manage/sunset": Sunset
 }
-export default function NewsRouter() {
+function NewsRouter(props) {
     const {rights} = JSON.parse(localStorage.getItem("role"))
-    const[backRouteList, setBackRouteList] = useState([])
-    useEffect(() =>{
+    const [backRouteList, setBackRouteList] = useState([])
+    useEffect(() => {
         // 并行执行多个异步操作，当所有操作都完成时再进行下一步处理。
         // 确保一组异步任务全部成功，一旦有失败的任务可以立即处理错误
         Promise.all([
@@ -47,7 +49,8 @@ export default function NewsRouter() {
         ]).then(res => {
             setBackRouteList([...res[0].data, ...res[1].data])
         })
-    },[])
+    }, [])
+
     // 当前路径存在该路由，且pagepermisson为 1 ,即true，则返回true,修改配置项关闭按钮，就为0，则是false
     function checkRoute(item) {
         return LocalRouteMap[item.key] && (item.pagepermisson || item.routepermisson)
@@ -59,33 +62,44 @@ export default function NewsRouter() {
     }
 
     return (
-        <Routes>
-            {/*在 Routes 中添加一个 Route，其 path 为 /，并使用 Navigate 组件将路径重定向到 /home。*/}
-            {/*replace 属性用于替换当前的历史记录条目，而不是添加新的历史记录条目。*/}
-            <Route path="/" element={<Navigate to="/home" replace />} />
-            {backRouteList.map((item) => {
-                if (checkRoute(item) && checkUserPermission(item)){
-                    const Component = LocalRouteMap[item.key];
-                    return (
-                        <Route
-                            key={item.key}
-                            path={item.key}
-                            element={
-                                <PrivateRoute>
-                                    {/* 动态渲染组件 */}
-                                    {/*将 LocalRouteMap[item.key] 赋值给一个变量 Component。然后在 JSX 中使用 <Component /> 来渲染组件*/}
-                                    {/*也可以使用{LocalRouteMap[item.key] && React.createElement(LocalRouteMap[item.key])}*/}
-                                    {Component && <Component />}
-                                </PrivateRoute>
-                            }
-                        />
-                    );
-                } else {
-                    return null;
-                }
-            })}
+        // 加载中时候显示加载图标
+        <Spin size="large" spinning={props.isLoading}>
+            <Routes>
+                {/*在 Routes 中添加一个 Route，其 path 为 /，并使用 Navigate 组件将路径重定向到 /home。*/}
+                {/*replace 属性用于替换当前的历史记录条目，而不是添加新的历史记录条目。*/}
+                <Route path="/" element={<Navigate to="/home" replace/>}/>
+                {backRouteList.map((item) => {
+                    if (checkRoute(item) && checkUserPermission(item)) {
+                        const Component = LocalRouteMap[item.key];
+                        return (
+                            <Route
+                                key={item.key}
+                                path={item.key}
+                                element={
+                                    <PrivateRoute>
+                                        {/* 动态渲染组件 */}
+                                        {/*将 LocalRouteMap[item.key] 赋值给一个变量 Component。然后在 JSX 中使用 <Component /> 来渲染组件*/}
+                                        {/*也可以使用{LocalRouteMap[item.key] && React.createElement(LocalRouteMap[item.key])}*/}
+                                        {Component && <Component/>}
+                                    </PrivateRoute>
+                                }
+                            />
+                        );
+                    } else {
+                        return null;
+                    }
+                })}
 
-            <Route path="*" element={<NotFound/>}/>
-        </Routes>
+                <Route path="*" element={<NotFound/>}/>
+            </Routes>
+        </Spin>
     )
- }
+}
+
+const mapStateToProps = (state) => {
+    return {
+        isLoading: state.LoadingReducer.isLoading,
+    }
+}
+
+export default  connect(mapStateToProps)(NewsRouter);

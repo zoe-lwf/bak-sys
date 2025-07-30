@@ -1,5 +1,5 @@
 // src/news/sandbox/NewsSandBox.js
-import {SideMenu} from "../../components/sandbox/SideMenu";
+import SideMenu from "../../components/sandbox/SideMenu";
 import TopHeader from "../../components/sandbox/TopHeader";
 import {Layout, theme} from "antd";
 import {Content} from "antd/es/layout/layout";

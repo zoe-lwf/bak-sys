@@ -2,8 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {useNavigate, useParams} from "react-router-dom";
 import {Card, Col, Row, Space} from "antd";
-import {ArrowLeftOutlined, HeartOutlined, HeartTwoTone} from "@ant-design/icons";
-import Title from "antd/es/skeleton/Title";
+import {ArrowLeftOutlined, HeartOutlined} from "@ant-design/icons";
 
 export default function Detail() {
     const navigate = useNavigate();
